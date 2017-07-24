@@ -1,0 +1,18 @@
+# IDE files
+.idea
+
+# Dependencies
+node_modules
+package-lock.json
+
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+
+# Coverage
+coverage
