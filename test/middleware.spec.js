@@ -32,6 +32,5 @@ test('ramses.middleware(): failure tests', function (t) {
     t.ok(!err, 'should skip on CORS preflight');
   });
 
-
   t.end();
 });
