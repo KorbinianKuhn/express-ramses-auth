@@ -13,7 +13,6 @@ var ramsesMiddleware = function (options) {
 
   var credentialsRequired = typeof options.credentialsRequired === 'undefined' ? true : options.credentialsRequired;
 
-
   var _requestProperty = options.requestProperty || 'user';
   var _resultProperty = options.resultProperty;
 
@@ -98,9 +97,7 @@ var ramsesMiddleware = function (options) {
     }
 
     if (_resultProperty) {
-      console.log('here');
       set(res, _resultProperty, dtoken);
-      set(res, 'test', 'value');
     }
     set(req, _requestProperty, dtoken);
 

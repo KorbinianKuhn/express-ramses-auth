@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const ramses = require('../../');
+const ramses = require('../');
 const keys = require('./keys/keys')
 const app = express();
 const request = require('request');
