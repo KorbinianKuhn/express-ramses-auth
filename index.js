@@ -1,6 +1,6 @@
 const middleware = require('./src/middleware');
 const proof = require('./src/proof');
-const ramses = require('../ramses-auth');
+const ramses = require('ramses-auth');
 
 exports.middleware = middleware;
 exports.createProof = proof.createProof;
