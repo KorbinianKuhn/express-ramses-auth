@@ -1,5 +1,5 @@
 var UnauthorizedError = require('./errors/UnauthorizedError');
-var ramses = require('../../ramses-auth');
+var ramses = require('ramses-auth');
 var set = require('lodash.set');
 
 function isFunction(object) {

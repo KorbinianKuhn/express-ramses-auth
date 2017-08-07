@@ -1,4 +1,4 @@
-const ramses = require('../../ramses-auth');
+const ramses = require('ramses-auth');
 const jwa = require('jwa');
 const UnauthorizedError = require('./errors/UnauthorizedError');
 
