@@ -79,7 +79,7 @@ var ramsesMiddleware = function (options) {
 
     var key;
     if (isFunction(options.key)) {
-      key = options.key(dtoken);
+      key = options.key(req, dtoken);
     } else {
       key = options.key;
     }
