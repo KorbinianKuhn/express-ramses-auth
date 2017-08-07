@@ -1,7 +1,7 @@
 const test = require('tape');
 const ramses = require('..');
 const keys = require('./keys/keys');
-const ramsesAuth = require('../../ramses-auth');
+const ramsesAuth = require('ramses-auth');
 
 var jwtWithoutJti = ramsesAuth.sign({
     key: 'value'
