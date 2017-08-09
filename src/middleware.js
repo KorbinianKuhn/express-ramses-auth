@@ -1,12 +1,13 @@
-var UnauthorizedError = require('./errors/UnauthorizedError');
-var ramses = require('ramses-auth');
-var set = require('lodash.set');
+const UnauthorizedError = require('./errors/UnauthorizedError');
+const ramses = require('ramses-auth');
+const set = require('lodash.set');
+const unless = require('express-unless');
 
 function isFunction(object) {
   return Object.prototype.toString.call(object) === '[object Function]';
 }
 
-var ramsesMiddleware = function (options) {
+const ramsesMiddleware = function (options) {
   if (!options || !options.key) {
     throw new Error('verification key must be set');
   }
@@ -16,7 +17,7 @@ var ramsesMiddleware = function (options) {
   var _requestProperty = options.requestProperty || 'user';
   var _resultProperty = options.resultProperty;
 
-  var middleware = function (req, res, next) {
+  const middleware = function (req, res, next) {
     var token;
 
     if (req.method === 'OPTIONS' && req.headers.hasOwnProperty('access-control-request-headers')) {
@@ -103,6 +104,9 @@ var ramsesMiddleware = function (options) {
 
     next();
   }
+
+  middleware.unless = unless;
+  middleware.UnauthorizedError = UnauthorizedError;
 
   return middleware;
 }

@@ -30,6 +30,15 @@ test('ramses.middleware()', function (t) {
     t.ok(!err, "should next if no authorization header and credentials are not required");
   })
 
+  req.originalUrl = '/skip'
+  ramses.middleware({
+    key: keys.rsaPublicKey,
+  }).unless({
+    path: '/skip'
+  })(req, res, function (err) {
+    t.ok(!err, "support unless skip");
+  })
+
   var corsReq = {
     method: 'OPTIONS',
     headers: {

@@ -124,6 +124,16 @@ app.get('/protected',
   });
 ```
 
+Optionally you can make some paths unprotected as follows:
+
+```javascript
+app.use(jwt({ key: publicKey}).unless({path: ['/skip']}));
+```
+
+This is especially useful when applying to multiple routes. In the example above, `path` can be a string, a regexp, or an array of any of those.
+
+> For more details on the `.unless` syntax including additional options, please see [express-unless](https://github.com/jfromaniello/express-unless).
+
 ### Revoked tokens
 
 It is possible that some tokens will need to be revoked so they cannot be used any longer. You can provide a function as the `isRevoked` option. The signature of the function is `function(req, payload, done)`:
