@@ -127,7 +127,7 @@ app.get('/protected',
 Optionally you can make some paths unprotected as follows:
 
 ```javascript
-app.use(jwt({ key: publicKey}).unless({path: ['/skip']}));
+app.use(ramses({ key: publicKey}).unless({path: ['/skip']}));
 ```
 
 This is especially useful when applying to multiple routes. In the example above, `path` can be a string, a regexp, or an array of any of those.
