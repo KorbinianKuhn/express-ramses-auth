@@ -162,7 +162,7 @@ test('ramses.middleware()', function (t) {
   req.headers.authorization = `Bearer ${ramses.sign({foo: 'bar'}, keys.rsaPrivateKey)}`;
   ramses.middleware({
     key: keys.rsaPublicKey,
-    isRevokedFunction: getRevokedTokenTrue
+    isRevoked: getRevokedTokenTrue
   })(req, res, function (err) {
     t.ok(err);
     t.equals(err.code, 'revoked_token', 'should throw if token is revoked');
@@ -175,7 +175,7 @@ test('ramses.middleware()', function (t) {
   req.headers.authorization = `Bearer ${ramses.sign({foo: 'bar'}, keys.rsaPrivateKey)}`;
   ramses.middleware({
     key: keys.rsaPublicKey,
-    isRevokedFunction: getRevokedTokenFalse
+    isRevoked: getRevokedTokenFalse
   })(req, res, function (err) {
     t.ok(!err, 'should not throw if token is not revoked');
   });

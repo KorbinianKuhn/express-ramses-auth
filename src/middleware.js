@@ -91,7 +91,7 @@ const ramsesMiddleware = function (options) {
       }));
     }
 
-    if (options.isRevokedFunction && options.isRevokedFunction(dtoken)) {
+    if (options.isRevoked && options.isRevoked(dtoken)) {
       return next(new UnauthorizedError('revoked_token', {
         message: 'The token has been revoked.'
       }));
