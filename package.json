@@ -40,6 +40,6 @@
     "express-unless": "^0.3.1",
     "jwa": "^1.1.5",
     "lodash.set": "^4.3.2",
-    "ramses-auth": "^1.2.0"
+    "ramses-auth": "^1.2.1"
   }
 }
