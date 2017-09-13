@@ -97,26 +97,18 @@ const ramsesMiddleware = function (options) {
       return next(new UnauthorizedError('invalid_token', err));
     }
 
-    /*
-    if (!ramses.validate(token, key, options)) {
-      return next(new UnauthorizedError('invalid_token', {
-        message: 'Token is invalid.'
-      }));
-    }
-    */
-
     async.waterfall([
       function getKey(callback) {
         keyCallback(req, dtoken, callback);
       },
-      function validateToken(key, callback) {
-        if (ramses.validate(token, key, options)) {
-          callback(null, true);
-        } else {
-          callback(new UnauthorizedError('invalid_token', {
-            message: 'Token is invalid.'
-          }));
-        }
+      function verifyToken(key, callback) {
+        ramses.verify(token, key, options, function (err, dtoken) {
+          if (err) {
+            callback(err);
+          } else {
+            callback(null, dtoken);
+          }
+        });
       },
       function checkRevoked(decoded, callback) {
         isRevokedCallback(req, dtoken, function (err, revoked) {

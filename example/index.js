@@ -7,13 +7,13 @@ const request = require('request');
 
 var invalidTickets = [];
 
-const isRevokedFunction = function (ticket) {
+const isRevokedFunction = function (ticket, callback) {
   for (let i = 0; i < invalidTickets.length; i++) {
     if (invalidTickets[i] === ticket.payload.jti) {
-      return true;
+      return callback(new Error('Revoked token'))
     }
   }
-  return false;
+  return callback(null);
 }
 
 const isAuthorized = function (authorizedParty, audience) {
@@ -135,7 +135,6 @@ app.get('/service-a/interservice', function (req, res) {
     if (response.statusCode !== 200) {
       res.status(400).send(body);
     } else {
-      console.log(ramses.decode(body));
       res.status(200).send(`Success. This is the ticket for Service-B: [${body}]`);
     }
   })

@@ -2,6 +2,7 @@ const middleware = require('./src/middleware');
 const proof = require('./src/proof');
 const ramses = require('ramses-auth');
 
+exports.getToken = require('./src/get_token');
 exports.middleware = middleware;
 exports.createProof = proof.createProof;
 exports.verifyProof = proof.verifyProof;

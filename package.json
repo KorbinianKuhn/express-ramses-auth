@@ -4,11 +4,8 @@
   "description": "Express implementation of RAMSES - Robust Access Model for Securing Exposed Services",
   "main": "index.js",
   "scripts": {
-    "precoverage": "rm -rf coverage",
-    "coverage": "NODE_ENV=test istanbul cover tape -- test/**/*.spec.js",
-    "lint": "standard",
-    "start": "watch 'npm test' src test --wait 5 --interval 1",
-    "test": "NODE_ENV=test tape test/**/*.spec.js"
+    "test": "mocha ./test/**/*.spec.js",
+    "coverage": "nyc --reporter=html mocha ./test/**/*.spec.js"
   },
   "repository": {
     "type": "git",
@@ -33,16 +30,16 @@
   "homepage": "https://github.com/KorbinianKuhn/express-ramses-auth#readme",
   "devDependencies": {
     "express": "^4.15.4",
-    "istanbul": "^0.4.5",
     "lodash": "^4.17.4",
+    "mocha": "^3.5.3",
     "nodemon": "^1.11.0",
-    "tape": "^4.8.0"
+    "nyc": "^11.2.1"
   },
   "dependencies": {
     "async": "^2.5.0",
     "express-unless": "^0.3.1",
     "jwa": "^1.1.5",
     "lodash.set": "^4.3.2",
-    "ramses-auth": "^1.1.0"
+    "ramses-auth": "^1.2.0"
   }
 }

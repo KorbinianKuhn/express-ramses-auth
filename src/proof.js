@@ -1,44 +1,113 @@
 const ramses = require('ramses-auth');
 const jwa = require('jwa');
 const UnauthorizedError = require('./errors/UnauthorizedError');
+const getToken = require('./get_token');
 
-const getToken = function (authorizationHeader) {
-  var parts = authorizationHeader.split(' ');
-  if (parts.length == 2) {
-    var scheme = parts[0];
-    var token = parts[1];
+const isFunction = function (object) {
+  return Object.prototype.toString.call(object) === '[object Function]';
+}
+const wrapStaticKeyInCallback = function (key) {
+  return function (dtoken, cb) {
+    return cb(null, key);
+  };
+}
 
-    if (/^Bearer$/i.test(scheme)) {
-      return token;
-    } else {
-      new UnauthorizedError('credentials_bad_scheme', {
-        message: 'Format is Authorization: Bearer [token]'
-      })
+const createProof = function (dtoken, key, callback) {
+  if (!dtoken.payload) {
+    return callback(new UnauthorizedError('missing_payload', {
+      message: 'Token has no payload'
+    }));
+  }
+
+  if (!dtoken.payload.jti) {
+    return callback(new UnauthorizedError('missing_claim_jti', {
+      message: 'Token has no jti claim'
+    }));
+  }
+
+  if (!dtoken.header) {
+    return callback(new UnauthorizedError('missing_header', {
+      message: 'Token has no header'
+    }));
+  }
+
+  if (!dtoken.header.alg) {
+    return callback(new UnauthorizedError('missing_claim_alg', {
+      message: 'Token has no alg claim'
+    }));
+  }
+
+  var keyCallback = key;
+  if (!isFunction(keyCallback)) {
+    keyCallback = wrapStaticKeyInCallback(keyCallback);
+  }
+
+  keyCallback(dtoken, function (err, key) {
+    if (err) {
+      return callback(err);
     }
-  } else {
-    new UnauthorizedError('credentials_bad_format', {
-      message: 'Format is Authorization: Bearer [token]'
-    })
-  }
+
+    var proof;
+    try {
+      const algo = jwa(dtoken.header.alg);
+      proof = algo.sign(dtoken.payload.jti, key);
+    } catch (err) {
+      return callback(new UnauthorizedError('sign_error', {
+        message: err.message
+      }));
+    }
+
+    return callback(null, proof);
+  });
 }
 
-
-const createProof = function (authorizationHeader, key) {
-  const decodedTicket = ramses.decode(getToken(authorizationHeader));
-  const algo = jwa(decodedTicket.header.alg);
-  if (decodedTicket.payload.jti) {
-    return algo.sign(decodedTicket.payload.jti, key);
+const verifyProof = function (dtoken, proof, key, callback) {
+  if (!dtoken.payload) {
+    return callback(new UnauthorizedError('missing_payload', {
+      message: 'Token has no payload'
+    }));
   }
-  throw new Error('Missing claim jti in ticket.')
-}
 
-const verifyProof = function (authorizationHeader, proof, key) {
-  const decodedTicket = ramses.decode(getToken(authorizationHeader));
-  const algo = jwa(decodedTicket.header.alg);
-  if (decodedTicket.payload.jti) {
-    return algo.verify(decodedTicket.payload.jti, proof, key);
+  if (!dtoken.payload.jti) {
+    return callback(new UnauthorizedError('missing_claim_jti', {
+      message: 'Token has no jti claim'
+    }));
   }
-  throw new Error('Missing claim jti in ticket.')
+
+  if (!dtoken.header) {
+    return callback(new UnauthorizedError('missing_header', {
+      message: 'Token has no header'
+    }));
+  }
+
+  if (!dtoken.header.alg) {
+    return callback(new UnauthorizedError('missing_claim_alg', {
+      message: 'Token has no alg claim'
+    }));
+  }
+
+  var keyCallback = key;
+  if (!isFunction(keyCallback)) {
+    keyCallback = wrapStaticKeyInCallback(keyCallback);
+  }
+
+  keyCallback(dtoken, function (err, key) {
+    if (err) {
+      return callback(err);
+    }
+
+    var verified;
+    const algo = jwa(dtoken.header.alg);
+    try {
+      verified = algo.verify(dtoken.payload.jti, proof, key);
+    } catch (err) {
+      return callback(new UnauthorizedError('verification_error', {
+        message: err.message
+      }));
+    }
+
+    return callback(null, verified);
+  });
 }
 
 exports.createProof = createProof;

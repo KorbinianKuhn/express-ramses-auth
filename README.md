@@ -203,19 +203,22 @@ The middleware maps all options of the [ramses-auth](https://github.com/Korbinia
 
 The middleware exports all functions of the [ramses-auth](https://github.com/KorbinianKuhn/ramses-auth) package:
 
-* `sign(payload, key, options)`
-* `verify(ticket, key, options)`
+* `sign(payload, key, options, callback)`
+* `verify(ticket, key, options, callback)`
 * `decode(ticket, options)`
-* `validate(ticket, key, options`
 
 ### Proof of possession
 
 The middleware provides two functions to create and verify a proof of possession, that is necessary to create an AccessTicket from an AccessTicket. As RAMSES specifies, the `jti` claim must be part of the ticket.
 
 ```javascript
-const proof = ramses.createProof(authorizationHeader, key);
+ramses.createProof(req, key, function(err, proof) {
+  console.log(proof);
+});
 
-const valid = ramses.verifyProof(authorizationHeader, proof, key);
+ramses.createProof(req, proof, key, function(err, valid) {
+  console.log(valid);
+});
 ```
 
 ## Testing
@@ -230,12 +233,6 @@ To execute all unit tests once, use:
 
 ```
 $ npm test
-```
-
-or to run tests based on file watcher, use:
-
-```
-$ npm start
 ```
 
 To get information about the test coverage, use:
