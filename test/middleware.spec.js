@@ -144,38 +144,51 @@ test('ramses.middleware()', function (t) {
     t.equals(err.code, 'custom_invalid_token', 'should use errors thrown from custom getToken function');
   });
 
-  function getKey(dtoken) {
-    return keys.rsaPublicKey;
+
+  var keyCallback = function (req, dtoken, cb) {
+    process.nextTick(function () {
+      return cb(null, keys.rsaPublicKey)
+    });
   }
   req.headers = {};
   req.headers.authorization = `Bearer ${ramses.sign({foo: 'bar'}, keys.rsaPrivateKey)}`;
   ramses.middleware({
-    key: getKey
+    key: keyCallback
   })(req, res, function (err) {
     t.ok(!err, 'should verify with getKey function');
   });
 
-  function getRevokedTokenTrue() {
-    return true;
-  }
   req.headers = {};
   req.headers.authorization = `Bearer ${ramses.sign({foo: 'bar'}, keys.rsaPrivateKey)}`;
   ramses.middleware({
     key: keys.rsaPublicKey,
-    isRevoked: getRevokedTokenTrue
+    isRevoked: function (req, dtoken, done) {
+      done(new Error('An error ocurred'));
+    }
+  })(req, res, function (err) {
+    t.ok(err);
+    t.equals(err.message, 'An error ocurred', 'should throw if revoked token function throws error');
+  });
+
+  req.headers = {};
+  req.headers.authorization = `Bearer ${ramses.sign({foo: 'bar'}, keys.rsaPrivateKey)}`;
+  ramses.middleware({
+    key: keys.rsaPublicKey,
+    isRevoked: function (req, dtoken, done) {
+      done(null, true);
+    }
   })(req, res, function (err) {
     t.ok(err);
     t.equals(err.code, 'revoked_token', 'should throw if token is revoked');
   });
 
-  function getRevokedTokenFalse() {
-    return false;
-  }
   req.headers = {};
   req.headers.authorization = `Bearer ${ramses.sign({foo: 'bar'}, keys.rsaPrivateKey)}`;
   ramses.middleware({
     key: keys.rsaPublicKey,
-    isRevoked: getRevokedTokenFalse
+    isRevoked: function (req, dtoken, done) {
+      done(null, false);
+    }
   })(req, res, function (err) {
     t.ok(!err, 'should not throw if token is not revoked');
   });
