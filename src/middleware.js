@@ -36,6 +36,8 @@ const ramsesMiddleware = function (options) {
   var _requestProperty = options.requestProperty || 'user';
   var _resultProperty = options.resultProperty;
 
+  var attachFullToken = options.attachFullToken || false;
+
   const middleware = function (req, res, next) {
     var token;
 
@@ -129,10 +131,16 @@ const ramsesMiddleware = function (options) {
         return next(err);
       }
 
-      if (_resultProperty) {
-        set(res, _resultProperty, dtoken);
+      if (attachFullToken) {
+        var attachment = dtoken;
+      } else {
+        var attachment = dtoken.payload;
       }
-      set(req, _requestProperty, dtoken);
+
+      if (_resultProperty) {
+        set(res, _resultProperty, attachment);
+      }
+      set(req, _requestProperty, attachment);
 
       next();
 

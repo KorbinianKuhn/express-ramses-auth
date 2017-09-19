@@ -238,7 +238,7 @@ describe('middleware', function () {
     ramses.middleware({
       key: keys.rsaPublicKey
     })(req, res, function (err) {
-      assert.ok(lodash.isEqual(req.user, dtoken));
+      assert.ok(lodash.isEqual(req.user, dtoken.payload));
     });
   });
 
@@ -247,7 +247,7 @@ describe('middleware', function () {
       key: keys.rsaPublicKey,
       requestProperty: 'customProperty'
     })(req, res, function (err) {
-      assert.ok(lodash.isEqual(req.customProperty, dtoken));
+      assert.ok(lodash.isEqual(req.customProperty, dtoken.payload));
     });
   });
 
@@ -256,8 +256,16 @@ describe('middleware', function () {
       key: keys.rsaPublicKey,
       resultProperty: 'user'
     })(req, res, function (err) {
-      assert.ok(lodash.isEqual(res.user, dtoken));
+      assert.ok(lodash.isEqual(res.user, dtoken.payload));
     });
   });
 
+  it('res should contain full decoded token under default property user', function () {
+    ramses.middleware({
+      key: keys.rsaPublicKey,
+      attachFullToken: true
+    })(req, res, function (err) {
+      assert.ok(lodash.isEqual(req.user, dtoken));
+    });
+  });
 });

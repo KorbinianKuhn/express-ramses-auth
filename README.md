@@ -56,7 +56,7 @@ app.get('/protected',
   });
 ```
 
-By default, the decoded token is attached to `req.user` but can be configured with the `requestProperty` option.
+By default, the decoded tokens payload is attached to `req.user` but can be configured with the `requestProperty` option.
 
 ```javascript
 ramses({ key: publicKey, requestProperty: 'auth' });
@@ -66,6 +66,12 @@ The token can also be attached to the `result` object with the `resultProperty` 
 
 ```javascript
 ramses({ key: publicKey, resultProperty: 'locals.user' });
+```
+
+The full decoded token (header, payload and signature) can be attached with the `attachFullToken` option.
+
+```javascript
+ramses({ key: publicKey, attachFullToken: true });
 ```
 
 Both `resultProperty` and `requestProperty` utilize [lodash.set](https://lodash.com/docs/4.17.2#set) and will accept nested property paths.
