@@ -215,14 +215,14 @@ The middleware exports all functions of the [ramses-auth](https://github.com/Kor
 
 ### Proof of possession
 
-The middleware provides two functions to create and verify a proof of possession, that is necessary to create an AccessTicket from an AccessTicket. As RAMSES specifies, the `jti` claim must be part of the ticket.
+The middleware provides two functions to create and verify a proof of possession, that is necessary to create an AccessTicket from an AccessTicket. As RAMSES specifies, the `jti` claim should of the ticket shoud be signed with the services private key.
 
 ```javascript
-ramses.createProof(req, key, function(err, proof) {
+ramses.createProof(message, key, function(err, proof) {
   console.log(proof);
 });
 
-ramses.createProof(req, proof, key, function(err, valid) {
+ramses.createProof(message, proof, key, function(err, valid) {
   console.log(valid);
 });
 ```

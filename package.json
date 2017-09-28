@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/KorbinianKuhn/express-ramses-auth#readme",
   "devDependencies": {
-    "express": "^4.15.4",
+    "express": "^4.15.5",
     "lodash": "^4.17.4",
     "mocha": "^3.5.3",
     "nodemon": "^1.11.0",
@@ -40,6 +40,6 @@
     "express-unless": "^0.3.1",
     "jwa": "^1.1.5",
     "lodash.set": "^4.3.2",
-    "ramses-auth": "^1.2.1"
+    "ramses-auth": "^1.2.3"
   }
 }
