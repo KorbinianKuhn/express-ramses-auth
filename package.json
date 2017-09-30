@@ -1,6 +1,6 @@
 {
   "name": "express-ramses-auth",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Express implementation of RAMSES - Robust Access Model for Securing Exposed Services",
   "main": "index.js",
   "scripts": {
