@@ -50,7 +50,7 @@ const verifyProof = function (message, proof, key, options, callback) {
   alg = options.alg || 'RS256';
 
   var verified;
-  const algo = jwa(dtoken.header.alg);
+  const algo = jwa(alg);
   try {
     verified = algo.verify(message, proof, key);
   } catch (err) {
